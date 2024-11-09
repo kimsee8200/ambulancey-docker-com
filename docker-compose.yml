@@ -1,0 +1,32 @@
+version: "3"
+services:
+  api:
+    restart: on-failure
+    image: kimsee/dev
+    ports:
+      - "8030:8080"
+    depends_on: #7
+      - mysql
+    environment: #8
+        SPRING_DATASOURCE_URL: jdbc:mysql://ambulancey-server_backend:3222/ambulancey?characterEncoding=UTF-8&serverTimezone=UTC&&allowPublicKeyRetrieval=true&useSSL=false
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: 1234
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:latest
+    restart: always
+    container_name: mysql_ambulancey
+    ports:
+      - "3222:3306"
+    environment:
+      - MYSQL_DATABASE:ambulancey
+      - MYSQL_ROOT_PASSWORD=1234
+      - TZ=Asia/Seoul
+      - ./mysql/conf.d:/var/lib/mysql
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
